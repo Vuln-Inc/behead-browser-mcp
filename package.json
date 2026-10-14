@@ -1,0 +1,23 @@
+{
+  "name": "behead-browser-mcp",
+  "version": "0.1.0",
+  "description": "MCP browser automation and DevTools servers backed exclusively by Behead Browser and Patchright.",
+  "type": "module",
+  "bin": {
+    "behead-browser-mcp": "src/browser.mjs",
+    "behead-browser-devtools-mcp": "src/devtools.mjs"
+  },
+  "scripts": {
+    "check": "node --check src/browser.mjs && node --check src/devtools.mjs",
+    "test": "node --test",
+    "test:integration": "node --test test/integration.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vuln-Inc/behead-browser-mcp.git"
+  }
+}
