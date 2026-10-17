@@ -54,6 +54,7 @@ The environment variable must point to the compiled module exporting `launchBehe
 ```
 
 Use `behead_browser_*` for normal automation and `behead_devtools_*` when console, network, performance, memory, or arbitrary CDP access is required.
+Network history calls default to 50 records per page; use `pageIdx` and `pageSize` when more detail is needed.
 
 ## Verify
 

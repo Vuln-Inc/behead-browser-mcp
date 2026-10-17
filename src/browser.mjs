@@ -8,6 +8,7 @@ import { schema, serve, text } from "./protocol.mjs"
 const runtime = new BeheadRuntime()
 const str = (description) => ({ type: "string", description })
 const bool = (description) => ({ type: "boolean", description })
+const int = (description) => ({ type: "integer", description })
 const tools = [
   ["behead_browser_navigate", "Open a URL in Behead Browser.", schema({ url: str("URL") }, ["url"])],
   ["behead_browser_snapshot", "Return an ARIA snapshot and page metadata.", schema()],
@@ -19,7 +20,7 @@ const tools = [
   ["behead_browser_evaluate", "Evaluate JavaScript in the page.", schema({ expression: str("JavaScript expression") }, ["expression"])],
   ["behead_browser_screenshot", "Capture a screenshot.", schema({ path: str("Output path"), fullPage: bool("Capture full page") })],
   ["behead_browser_cookies", "Return session cookies.", schema()],
-  ["behead_browser_network_requests", "Return observed requests.", schema()],
+  ["behead_browser_network_requests", "Return observed requests with bounded pagination.", schema({ pageIdx: int("Zero-based page index"), pageSize: int("Page size, default 50") })],
   ["behead_browser_close", "Close Behead Browser.", schema()],
 ].map(([name, description, inputSchema]) => ({ name, description, inputSchema }))
 
@@ -68,7 +69,9 @@ async function callTool(name, args) {
     case "behead_browser_cookies":
       return text(await runtime.session.context.cookies())
     case "behead_browser_network_requests":
-      return text(runtime.networkRequests.map(({ request, response, ...record }) => ({ ...record, status: response?.status() })))
+      return text(runtime.networkRequests
+        .map(({ request, response, ...record }) => ({ ...record, status: response?.status() }))
+        .slice((args.pageIdx || 0) * (args.pageSize || 50), ((args.pageIdx || 0) + 1) * (args.pageSize || 50)))
     default:
       throw new Error(`unknown tool: ${name}`)
   }

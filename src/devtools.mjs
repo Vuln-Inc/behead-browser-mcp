@@ -82,7 +82,7 @@ async function snapshot(page, verbose) {
   return `${await page.locator("body").ariaSnapshot()}\n\n${lines.join("\n")}`
 }
 
-const paginate = (items, pageIdx = 0, pageSize = items.length || 1) => items.slice(pageIdx * pageSize, (pageIdx + 1) * pageSize)
+const paginate = (items, pageIdx = 0, pageSize = 50) => items.slice(pageIdx * pageSize, (pageIdx + 1) * pageSize)
 
 async function callTool(name, args) {
   if (name === "behead_devtools_close") { await runtime.close(); return text("behead devtools closed") }
